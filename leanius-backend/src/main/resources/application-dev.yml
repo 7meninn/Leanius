@@ -1,0 +1,21 @@
+# Development profile
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/leanius
+
+jwt:
+  secret: dev-secret-key-change-in-production-min-256-bits-required-for-hs256
+
+azure:
+  storage:
+    connection-string: ${AZURE_STORAGE_CONNECTION_STRING:UseDevelopmentStorage=true}
+    container-name: leanius-audio-dev
+
+cors:
+  allowed-origins: http://localhost:3000,http://localhost:5173
+
+logging:
+  level:
+    com.leanius: DEBUG
+    org.springframework.web: DEBUG
