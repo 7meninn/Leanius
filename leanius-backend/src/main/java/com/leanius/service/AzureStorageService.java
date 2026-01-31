@@ -4,6 +4,8 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.sas.BlobSasPermission;
+import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.leanius.exception.InvalidFileException;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -28,13 +31,14 @@ public class AzureStorageService {
     private String containerName;
 
     private BlobContainerClient containerClient;
+    private BlobServiceClient blobServiceClient;
 
     @PostConstruct
     public void init() {
         if (connectionString != null && !connectionString.isEmpty() && 
             !connectionString.equals("UseDevelopmentStorage=true")) {
             try {
-                BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+                blobServiceClient = new BlobServiceClientBuilder()
                         .connectionString(connectionString)
                         .buildClient();
                 containerClient = blobServiceClient.getBlobContainerClient(containerName);
@@ -54,7 +58,7 @@ public class AzureStorageService {
     }
 
     /**
-     * Upload a file to Azure Blob Storage.
+     * Upload a file to Azure Blob Storage and return a SAS URL.
      */
     public String uploadFile(MultipartFile file, String userId) {
         if (containerClient == null) {
@@ -73,13 +77,51 @@ public class AzureStorageService {
             BlobClient blobClient = containerClient.getBlobClient(blobName);
             blobClient.upload(file.getInputStream(), file.getSize(), true);
 
-            String url = blobClient.getBlobUrl();
-            log.info("File uploaded to Azure: {}", url);
-            return url;
+            // Generate SAS URL for the uploaded blob
+            String sasUrl = generateSasUrl(blobClient);
+            log.info("File uploaded to Azure with SAS URL: {}", blobName);
+            return sasUrl;
         } catch (IOException e) {
             log.error("Failed to upload file to Azure", e);
             throw new InvalidFileException("Failed to upload file: " + e.getMessage());
         }
+    }
+
+    /**
+     * Generate a SAS URL for a blob with read permission valid for 1 year.
+     */
+    public String generateSasUrl(BlobClient blobClient) {
+        // SAS token valid for 1 year
+        OffsetDateTime expiryTime = OffsetDateTime.now().plusYears(1);
+        
+        BlobSasPermission permission = new BlobSasPermission().setReadPermission(true);
+        
+        BlobServiceSasSignatureValues sasValues = new BlobServiceSasSignatureValues(expiryTime, permission);
+        
+        String sasToken = blobClient.generateSas(sasValues);
+        return blobClient.getBlobUrl() + "?" + sasToken;
+    }
+
+    /**
+     * Generate a SAS URL from an existing blob URL.
+     */
+    public String generateSasUrlFromBlobUrl(String blobUrl) {
+        if (containerClient == null || blobUrl == null) {
+            return blobUrl;
+        }
+
+        try {
+            String blobName = extractBlobNameFromUrl(blobUrl);
+            if (blobName != null) {
+                BlobClient blobClient = containerClient.getBlobClient(blobName);
+                if (blobClient.exists()) {
+                    return generateSasUrl(blobClient);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to generate SAS URL for: {}", blobUrl, e);
+        }
+        return blobUrl;
     }
 
     /**
@@ -91,8 +133,9 @@ public class AzureStorageService {
         }
 
         try {
-            // Extract blob name from URL
-            String blobName = extractBlobNameFromUrl(blobUrl);
+            // Extract blob name from URL (remove any query params like SAS token)
+            String cleanUrl = blobUrl.split("\\?")[0];
+            String blobName = extractBlobNameFromUrl(cleanUrl);
             if (blobName != null) {
                 BlobClient blobClient = containerClient.getBlobClient(blobName);
                 if (blobClient.exists()) {

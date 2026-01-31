@@ -8,5 +8,7 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    host: '0.0.0.0',
+    allowedHosts: ['host.docker.internal'],
   },
 })

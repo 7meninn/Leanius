@@ -180,11 +180,14 @@ public class SongService {
      * Convert Song entity to SongDTO.
      */
     private SongDTO toSongDTO(Song song) {
+        // Generate SAS URL for secure audio access
+        String secureAudioUrl = azureStorageService.generateSasUrlFromBlobUrl(song.getAudioUrl());
+        
         return SongDTO.builder()
                 .id(song.getId())
                 .title(song.getTitle())
                 .artist(song.getArtist())
-                .audioUrl(song.getAudioUrl())
+                .audioUrl(secureAudioUrl)
                 .duration(song.getDuration())
                 .frequencyWeight(song.getFrequencyWeight())
                 .syncType(song.getSyncType())
