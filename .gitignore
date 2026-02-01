@@ -12,3 +12,35 @@ dist/
 *.njsproj
 *.sln
 *.sw?
+
+# TypeScript build info
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+tsconfig.node.tsbuildinfo
+
+# Test files
+embed-test.html
+
+# Screenshots and images (temporary)
+*.png
+*.jpg
+*.jpeg
+!src/**/*.png
+!src/**/*.jpg
+!public/**/*.png
+!public/**/*.jpg
+
+# Temporary planning docs (keep EMBED_PLAYER_CONTEXT.md)
+IMPLEMENTATION_STATUS.md
+PLAN_SUMMARY.md
+PROJECT_ROADMAP.md
+VIDEO_BACKGROUND_PLAN.md
+
+# Audio/Video test files
+*.flac
+*.mp3
+*.wav
+*.mp4
+*.webm
+!src/**/*.mp3
+!public/**/*.mp3

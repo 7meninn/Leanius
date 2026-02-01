@@ -16,6 +16,206 @@
   animation: slide-up 0.3s ease-out;
 }
 
+/* =====================================================
+   LYRICS PLAYER ANIMATIONS & GLASSMORPHISM
+   ===================================================== */
+
+/* Text glow animation for active lyrics */
+@keyframes text-glow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 166, 87, 0.5), 0 0 20px rgba(255, 166, 87, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 166, 87, 0.8), 0 0 40px rgba(255, 166, 87, 0.5), 0 0 60px rgba(255, 166, 87, 0.3);
+  }
+}
+
+.animate-text-glow {
+  animation: text-glow 2s ease-in-out infinite;
+}
+
+/* Pulse animation for play button */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+
+/* Audio waveform animation */
+@keyframes waveform {
+  0%, 100% { height: 4px; }
+  25% { height: 16px; }
+  50% { height: 8px; }
+  75% { height: 20px; }
+}
+
+.waveform-bar {
+  width: 3px;
+  background: linear-gradient(to top, #58a6ff, #7ee787);
+  border-radius: 2px;
+  animation: waveform 0.8s ease-in-out infinite;
+}
+
+.waveform-bar:nth-child(1) { animation-delay: 0s; }
+.waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+.waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+.waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+.waveform-bar:nth-child(5) { animation-delay: 0.4s; }
+
+/* Line entrance animation */
+@keyframes line-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-line-enter {
+  animation: line-slide-in 0.3s ease-out forwards;
+}
+
+/* Gradient border animation */
+@keyframes gradient-rotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-border {
+  background: linear-gradient(90deg, #58a6ff, #7ee787, #f0883e, #58a6ff);
+  background-size: 300% 300%;
+  animation: gradient-rotate 3s ease infinite;
+}
+
+/* Active line highlight glow */
+@keyframes line-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 20px rgba(88, 166, 255, 0.1);
+  }
+  50% {
+    box-shadow: inset 0 0 30px rgba(88, 166, 255, 0.2);
+  }
+}
+
+.animate-line-glow {
+  animation: line-glow 2s ease-in-out infinite;
+}
+
+/* Progress bar shine effect */
+@keyframes shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+
+.progress-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shine 2s ease-in-out infinite;
+}
+
+/* Floating particles background */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-10px);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translateY(-30px) translateX(5px);
+    opacity: 0.4;
+  }
+}
+
+.floating-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glassmorphism base styles - semi-transparent to show video background */
+.glass {
+  background: rgba(13, 17, 23, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(48, 54, 61, 0.4);
+}
+
+.glass-dark {
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(48, 54, 61, 0.5);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Neon glow effects */
+.neon-blue {
+  box-shadow: 0 0 10px rgba(88, 166, 255, 0.3), 0 0 20px rgba(88, 166, 255, 0.2), 0 0 30px rgba(88, 166, 255, 0.1);
+}
+
+.neon-green {
+  box-shadow: 0 0 10px rgba(126, 231, 135, 0.3), 0 0 20px rgba(126, 231, 135, 0.2), 0 0 30px rgba(126, 231, 135, 0.1);
+}
+
+.neon-orange {
+  box-shadow: 0 0 10px rgba(240, 136, 62, 0.3), 0 0 20px rgba(240, 136, 62, 0.2), 0 0 30px rgba(240, 136, 62, 0.1);
+}
+
+/* Smooth scale on hover */
+.hover-scale {
+  transition: transform 0.2s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Active line left border gradient */
+.active-border-gradient {
+  border-left: 2px solid transparent;
+  border-image: linear-gradient(to bottom, #58a6ff, #7ee787) 1;
+}
+
+/* =====================================================
+   END LYRICS PLAYER STYLES
+   ===================================================== */
+
 /* Scrollbar styling for dark theme */
 ::-webkit-scrollbar {
   width: 8px;

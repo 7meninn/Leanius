@@ -150,6 +150,15 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     setDuration(0);
     setCurrentLyricLine(null);
     setCurrentLyricIndex(-1);
+    
+    // Initialize lyrics adjustment from song's syncOffset (from database)
+    // This allows the saved offset to be loaded when selecting a song
+    if (song.syncOffset !== undefined) {
+      setLyricsAdjustment(prev => ({
+        ...prev,
+        [song.id]: song.syncOffset,
+      }));
+    }
   }, [stopTimeUpdate]);
 
   const clearSong = useCallback(() => {

@@ -3,6 +3,7 @@ import HomePage from './pages/home/page';
 import DashboardPage from './pages/dashboard/page';
 import TermsPage from './pages/terms/page';
 import ResetPasswordPage from './pages/reset-password/page';
+import EmbedPage from './pages/EmbedPage';
 import { ProtectedRoute } from './common/ProtectedRoute';
 import { AuthRedirect } from './common/AuthRedirect';
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         <DashboardPage />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: '/embed',
+    element: <EmbedPage />,
   },
   {
     path: '/terms',

@@ -80,4 +80,17 @@ public class SongController {
         SongDTO song = songService.updateSongWeight(songId, userDetails.getUsername(), request.getWeight());
         return ResponseEntity.ok(ApiResponse.success(song, "Weight updated successfully"));
     }
+
+    /**
+     * Update song settings (frequency weight and sync offset).
+     */
+    @PutMapping("/{songId}/settings")
+    public ResponseEntity<ApiResponse<SongDTO>> updateSettings(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String songId,
+            @Valid @RequestBody UpdateSongSettingsRequest request) {
+        SongDTO song = songService.updateSongSettings(songId, userDetails.getUsername(), 
+                request.getFrequencyWeight(), request.getSyncOffset());
+        return ResponseEntity.ok(ApiResponse.success(song, "Settings saved successfully"));
+    }
 }

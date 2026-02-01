@@ -33,6 +33,17 @@ Thumbs.db
 .env.local
 *.env
 
+# Sensitive configuration files (contain credentials)
+src/main/resources/application-dev.yml
+src/main/resources/application-prod.yml
+
+# Audio/Video test files in backend folder
+*.flac
+*.mp3
+*.wav
+*.mp4
+*.webm
+
 # Eclipse
 .classpath
 .project

@@ -155,6 +155,27 @@ public class SongService {
     }
 
     /**
+     * Update song settings (frequency weight and sync offset).
+     */
+    public SongDTO updateSongSettings(String songId, String userId, int frequencyWeight, long syncOffset) {
+        if (frequencyWeight < 1 || frequencyWeight > 5) {
+            throw new InvalidFileException("Frequency weight must be between 1 and 5");
+        }
+
+        Song song = songRepository.findByIdAndUserId(songId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Song", "id", songId));
+
+        song.setFrequencyWeight(frequencyWeight);
+        song.setSyncOffset(syncOffset);
+        song.setUpdatedAt(LocalDateTime.now());
+        song = songRepository.save(song);
+
+        log.info("Song settings updated: {} - weight={}, offset={}ms by user {}", 
+                songId, frequencyWeight, syncOffset, userId);
+        return toSongDTO(song);
+    }
+
+    /**
      * Get the latest song update time for a user.
      */
     public LocalDateTime getLatestSongUpdateTime(String userId) {
@@ -183,6 +204,12 @@ public class SongService {
         // Generate SAS URL for secure audio access
         String secureAudioUrl = azureStorageService.generateSasUrlFromBlobUrl(song.getAudioUrl());
         
+        // Generate SAS URL for secure video access (if video exists)
+        String secureVideoUrl = null;
+        if (song.getVideoUrl() != null && !song.getVideoUrl().isEmpty()) {
+            secureVideoUrl = azureStorageService.generateSasUrlFromBlobUrl(song.getVideoUrl());
+        }
+        
         return SongDTO.builder()
                 .id(song.getId())
                 .title(song.getTitle())
@@ -190,8 +217,13 @@ public class SongService {
                 .audioUrl(secureAudioUrl)
                 .duration(song.getDuration())
                 .frequencyWeight(song.getFrequencyWeight())
+                .syncOffset(song.getSyncOffset())
                 .syncType(song.getSyncType())
                 .syncedLyrics(song.getSyncedLyrics())
+                // Video background fields
+                .videoUrl(secureVideoUrl)
+                .videoFileSize(song.getVideoFileSize())
+                .videoFormat(song.getVideoFormat())
                 .build();
     }
 

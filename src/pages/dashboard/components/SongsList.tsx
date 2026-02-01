@@ -4,13 +4,12 @@ import { useSongs } from '../../../hooks/useSongs';
 import { usePlayer } from '../../../hooks/usePlayer';
 import { useUI } from '../../../hooks/useUI';
 import { Song } from '../../../types';
-import { APP_CONFIG } from '../../../utils/constants';
 
 /**
  * Songs List component - displays user's uploaded songs
  */
 export const SongsList: React.FC = () => {
-  const { songs, deleteSong, updateSongWeight, isLoading } = useSongs();
+  const { songs, deleteSong, isLoading } = useSongs();
   const { selectSong, currentSong } = usePlayer();
   const { showToast, setActiveTab } = useUI();
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,14 +35,6 @@ export const SongsList: React.FC = () => {
       } catch (error) {
         showToast('error', error instanceof Error ? error.message : 'Failed to delete song');
       }
-    }
-  };
-
-  const handleWeightChange = async (songId: string, weight: number) => {
-    try {
-      await updateSongWeight(songId, weight);
-    } catch (error) {
-      showToast('error', error instanceof Error ? error.message : 'Failed to update weight');
     }
   };
 
@@ -86,7 +77,6 @@ export const SongsList: React.FC = () => {
               isActive={currentSong?.id === song.id}
               onSelect={() => handleSongClick(song)}
               onDelete={(e) => handleDelete(song.id, e)}
-              onWeightChange={(weight) => handleWeightChange(song.id, weight)}
             />
           ))
         )}
@@ -101,10 +91,9 @@ interface SongCardProps {
   isActive: boolean;
   onSelect: () => void;
   onDelete: (e: React.MouseEvent) => void;
-  onWeightChange: (weight: number) => void;
 }
 
-const SongCard: React.FC<SongCardProps> = ({ song, isActive, onSelect, onDelete, onWeightChange }) => {
+const SongCard: React.FC<SongCardProps> = ({ song, isActive, onSelect, onDelete }) => {
   return (
     <div
       onClick={onSelect}
@@ -130,24 +119,6 @@ const SongCard: React.FC<SongCardProps> = ({ song, isActive, onSelect, onDelete,
         <div className="flex-1 min-w-0">
           <h4 className="text-white font-medium truncate">{song.title}</h4>
           <p className="text-slate-400 text-sm truncate">{song.artist}</p>
-
-          {/* Weight Slider */}
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs text-slate-500">Weight:</span>
-            <input
-              type="range"
-              min={APP_CONFIG.FREQUENCY_WEIGHT_MIN}
-              max={APP_CONFIG.FREQUENCY_WEIGHT_MAX}
-              value={song.frequencyWeight}
-              onChange={(e) => {
-                e.stopPropagation();
-                onWeightChange(Number(e.target.value));
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className="flex-1 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-            />
-            <span className="text-xs text-slate-400 w-4">{song.frequencyWeight}x</span>
-          </div>
         </div>
 
         {/* Delete Button */}

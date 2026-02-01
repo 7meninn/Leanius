@@ -23,6 +23,12 @@ public class SongDTO {
     private String audioUrl;
     private long duration;
     private int frequencyWeight;
+    private long syncOffset;
     private String syncType;
     private List<LyricLine> syncedLyrics;
+
+    // Video background fields (optional)
+    private String videoUrl;
+    private long videoFileSize;
+    private String videoFormat;
 }

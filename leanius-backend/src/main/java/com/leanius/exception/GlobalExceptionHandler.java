@@ -86,6 +86,22 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("RATE_LIMIT_EXCEEDED", ex.getMessage()));
     }
 
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStorageError(StorageException ex) {
+        log.error("Storage operation failed: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("STORAGE_ERROR", "Storage operation failed. Please try again later."));
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUnauthorized(UnauthorizedException ex) {
+        log.warn("Unauthorized access: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error("UNAUTHORIZED", ex.getMessage()));
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
         log.warn("Access denied: {}", ex.getMessage());

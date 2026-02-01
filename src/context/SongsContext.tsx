@@ -21,6 +21,8 @@ interface SongsContextType {
   confirmLyrics: (songId: string, confirmed: boolean) => Promise<void>;
   deleteSong: (songId: string) => Promise<void>;
   updateSongWeight: (songId: string, weight: number) => Promise<void>;
+  updateSongSettings: (songId: string, frequencyWeight: number, syncOffset: number) => Promise<void>;
+  updateSongVideoUrl: (songId: string, videoUrl: string | undefined, videoFileSize?: number) => void;
   clearPendingSong: () => void;
   clearError: () => void;
 }
@@ -59,7 +61,12 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
           text: line.text,
         })),
         frequencyWeight: song.frequencyWeight || 3,
+        syncOffset: song.syncOffset || 0,
         createdAt: song.createdAt || '',
+        // Video background fields
+        videoUrl: song.videoUrl || undefined,
+        videoFileSize: song.videoFileSize || undefined,
+        videoFormat: song.videoFormat || undefined,
       }));
       
       setSongs(mappedSongs);
@@ -158,6 +165,38 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     }
   }, []);
 
+  const updateSongSettings = useCallback(async (songId: string, frequencyWeight: number, syncOffset: number) => {
+    setError(null);
+    try {
+      await apiClient.put(ENDPOINTS.SONGS.UPDATE_SETTINGS(songId), { frequencyWeight, syncOffset });
+      
+      // Update local state
+      setSongs(prev => prev.map(song => 
+        song.id === songId ? { ...song, frequencyWeight, syncOffset } : song
+      ));
+    } catch (err) {
+      setError(getErrorMessage(err));
+      throw new Error(getErrorMessage(err));
+    }
+  }, []);
+
+  /**
+   * Update a song's video URL in local state (after upload/delete).
+   * This is called by the useVideoUpload hook after successful API calls.
+   */
+  const updateSongVideoUrl = useCallback((songId: string, videoUrl: string | undefined, videoFileSize?: number) => {
+    setSongs(prev => prev.map(song => 
+      song.id === songId 
+        ? { 
+            ...song, 
+            videoUrl, 
+            videoFileSize: videoUrl ? videoFileSize : undefined,
+            videoFormat: videoUrl ? 'mp4' : undefined,
+          } 
+        : song
+    ));
+  }, []);
+
   const clearPendingSong = useCallback(() => {
     setPendingSong(null);
   }, []);
@@ -176,6 +215,8 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     confirmLyrics,
     deleteSong,
     updateSongWeight,
+    updateSongSettings,
+    updateSongVideoUrl,
     clearPendingSong,
     clearError,
   };
