@@ -13,7 +13,7 @@
 
     <groupId>com.leanius</groupId>
     <artifactId>leanius-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>leanius-backend</name>
     <description>Leanius - Embeddable Music Player with Real-Time Lyrics Synchronization</description>
 
