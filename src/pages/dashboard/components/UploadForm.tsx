@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload, Loader2, Music } from 'lucide-react';
+import { Upload, Loader2, Music, AlertCircle } from 'lucide-react';
 import { useSongs } from '../../../hooks/useSongs';
 import { useUI } from '../../../hooks/useUI';
 import { uploadSongSchema, UploadSongFormData } from '../../../utils/validation';
 
 /**
  * Upload Form component for adding new songs
+ * Only allows songs with synced lyrics available on LRCLib
  */
 export const UploadForm: React.FC = () => {
   const { uploadSong, isLoading } = useSongs();
   const { showToast, setShowLyricsConfirmation } = useUI();
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const {
     register,
@@ -24,13 +26,22 @@ export const UploadForm: React.FC = () => {
   });
 
   const onSubmit = async (data: UploadSongFormData) => {
+    setUploadError(null);
     try {
       await uploadSong(data.title, data.artist, data.audioFile[0]);
       setShowLyricsConfirmation(true);
       reset();
       setSelectedFileName(null);
     } catch (error) {
-      showToast('error', error instanceof Error ? error.message : 'Failed to upload song');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to upload song';
+      
+      // Check if it's a synced lyrics not found error
+      if (errorMessage.toLowerCase().includes('synced lyrics not available')) {
+        setUploadError(errorMessage);
+        showToast('error', 'This song doesn\'t have synced lyrics available');
+      } else {
+        showToast('error', errorMessage);
+      }
     }
   };
 
@@ -41,6 +52,8 @@ export const UploadForm: React.FC = () => {
     } else {
       setSelectedFileName(null);
     }
+    // Clear previous error when user selects a new file
+    setUploadError(null);
   };
 
   return (
@@ -58,6 +71,7 @@ export const UploadForm: React.FC = () => {
             type="text"
             placeholder="Song Title"
             className="input-base text-sm"
+            onChange={() => setUploadError(null)}
           />
           {errors.title && (
             <p className="mt-1 text-xs text-red-500">{errors.title.message}</p>
@@ -71,6 +85,7 @@ export const UploadForm: React.FC = () => {
             type="text"
             placeholder="Artist Name"
             className="input-base text-sm"
+            onChange={() => setUploadError(null)}
           />
           {errors.artist && (
             <p className="mt-1 text-xs text-red-500">{errors.artist.message}</p>
@@ -104,6 +119,20 @@ export const UploadForm: React.FC = () => {
           )}
         </div>
 
+        {/* Synced Lyrics Error Message */}
+        {uploadError && (
+          <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-[var(--radius-md)] text-red-700">
+            <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-medium">Synced lyrics not available</p>
+              <p className="text-red-600 mt-1">
+                This song doesn't have time-synced lyrics on LRCLib. 
+                Try checking the exact song title and artist name spelling.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Submit Button */}
         <button
           type="submit"
@@ -113,7 +142,7 @@ export const UploadForm: React.FC = () => {
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              Uploading...
+              Checking lyrics...
             </>
           ) : (
             <>
@@ -122,6 +151,11 @@ export const UploadForm: React.FC = () => {
             </>
           )}
         </button>
+
+        {/* Helper text */}
+        <p className="text-xs text-[var(--muted)] text-center">
+          Only songs with synced lyrics available can be added
+        </p>
       </form>
     </div>
   );

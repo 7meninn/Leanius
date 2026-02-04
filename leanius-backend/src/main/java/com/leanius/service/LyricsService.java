@@ -21,8 +21,41 @@ public class LyricsService {
     private final LyricsParser lyricsParser;
 
     /**
-     * Fetch lyrics for a song from LRCLib API.
+     * Check if synced lyrics are available for a song.
+     * This should be called BEFORE uploading the audio file.
+     * 
+     * @return LyricsData if synced lyrics are available
+     * @throws com.leanius.exception.SyncedLyricsNotFoundException if synced lyrics are not available
      */
+    public LyricsData checkAndFetchSyncedLyrics(String artist, String title) {
+        log.debug("Checking synced lyrics availability for '{}' by '{}'", title, artist);
+        
+        LRCLibClient.LRCLibResponse response = lrcLibClient.getLyrics(artist, title);
+        
+        // Check if we got a response and if it has synced lyrics
+        if (response == null || response.getSyncedLyrics() == null || response.getSyncedLyrics().isEmpty()) {
+            log.info("No synced lyrics available for '{}' by '{}'", title, artist);
+            return null; // Indicates no synced lyrics available
+        }
+        
+        // Parse the synced lyrics
+        List<LyricLine> syncedLyrics = lyricsParser.parseLRCFormat(response.getSyncedLyrics());
+        
+        if (syncedLyrics == null || syncedLyrics.isEmpty()) {
+            log.info("Failed to parse synced lyrics for '{}' by '{}'", title, artist);
+            return null;
+        }
+        
+        log.info("Found synced lyrics for '{}' by '{}' ({} lines)", title, artist, syncedLyrics.size());
+        
+        return new LyricsData(response.getPlainLyrics(), syncedLyrics, "SYNCED");
+    }
+
+    /**
+     * Fetch lyrics for a song from LRCLib API.
+     * @deprecated Use {@link #checkAndFetchSyncedLyrics(String, String)} instead to ensure synced lyrics are available.
+     */
+    @Deprecated
     public LyricsData fetchLyrics(String artist, String title) {
         log.debug("Fetching lyrics for '{}' by '{}'", title, artist);
         
@@ -72,6 +105,10 @@ public class LyricsService {
 
         public String getSyncType() {
             return syncType;
+        }
+        
+        public boolean hasSyncedLyrics() {
+            return syncedLyrics != null && !syncedLyrics.isEmpty();
         }
     }
 }

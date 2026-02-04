@@ -5,6 +5,7 @@ import com.leanius.dto.SongUploadResponse;
 import com.leanius.exception.InvalidFileException;
 import com.leanius.exception.ResourceNotFoundException;
 import com.leanius.exception.SongLimitExceededException;
+import com.leanius.exception.SyncedLyricsNotFoundException;
 import com.leanius.model.LyricLine;
 import com.leanius.model.Song;
 import com.leanius.repository.SongRepository;
@@ -37,6 +38,7 @@ public class SongService {
 
     /**
      * Upload a new song.
+     * Checks for synced lyrics availability BEFORE uploading the audio file.
      */
     public SongUploadResponse uploadSong(MultipartFile file, String title, String artist, String userId) {
         // Check song limit
@@ -45,10 +47,19 @@ public class SongService {
             throw new SongLimitExceededException();
         }
 
-        // Validate file
+        // Validate file format (but don't upload yet)
         fileValidator.validateAudioFile(file);
 
-        // Upload to Azure Storage
+        // IMPORTANT: Check for synced lyrics BEFORE uploading to Azure
+        // This prevents wasting storage for songs without synced lyrics
+        LyricsService.LyricsData lyricsData = lyricsService.checkAndFetchSyncedLyrics(artist, title);
+        
+        if (lyricsData == null || !lyricsData.hasSyncedLyrics()) {
+            log.info("Upload rejected: No synced lyrics available for '{}' by '{}'", title, artist);
+            throw new SyncedLyricsNotFoundException(artist, title);
+        }
+
+        // Now that we've confirmed synced lyrics exist, upload to Azure Storage
         String audioUrl = azureStorageService.uploadFile(file, userId);
         String format = fileValidator.getFileExtension(file.getOriginalFilename());
 
@@ -63,22 +74,15 @@ public class SongService {
                 .duration(0) // Will be updated later or from metadata
                 .frequencyWeight(3) // Default weight
                 .lyricsConfirmed(false)
+                .rawLyrics(lyricsData.getRawLyrics())
+                .syncedLyrics(lyricsData.getSyncedLyrics())
+                .syncType(lyricsData.getSyncType())
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        // Fetch lyrics from LRCLib
-        try {
-            LyricsService.LyricsData lyricsData = lyricsService.fetchLyrics(artist, title);
-            song.setRawLyrics(lyricsData.getRawLyrics());
-            song.setSyncedLyrics(lyricsData.getSyncedLyrics());
-            song.setSyncType(lyricsData.getSyncType());
-        } catch (Exception e) {
-            log.warn("Could not fetch lyrics for '{}' by '{}': {}", title, artist, e.getMessage());
-            song.setSyncType("UNSYNCED");
-        }
-
         song = songRepository.save(song);
-        log.info("Song uploaded: {} by {} for user {}", title, artist, userId);
+        log.info("Song uploaded: {} by {} for user {} (synced lyrics: {} lines)", 
+                title, artist, userId, lyricsData.getSyncedLyrics().size());
 
         // Generate lyrics preview
         String lyricsPreview = getLyricsPreview(song.getSyncedLyrics(), song.getRawLyrics());
@@ -89,7 +93,7 @@ public class SongService {
                 .artist(song.getArtist())
                 .lyricsPreview(lyricsPreview)
                 .syncType(song.getSyncType())
-                .lyricsFound(song.getSyncedLyrics() != null && !song.getSyncedLyrics().isEmpty())
+                .lyricsFound(true) // Always true now since we require synced lyrics
                 .build();
     }
 

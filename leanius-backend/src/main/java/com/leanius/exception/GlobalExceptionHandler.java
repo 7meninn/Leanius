@@ -54,6 +54,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("LYRICS_NOT_FOUND", ex.getMessage()));
     }
 
+    @ExceptionHandler(SyncedLyricsNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleSyncedLyricsNotFound(SyncedLyricsNotFoundException ex) {
+        log.info("Synced lyrics not available: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(ApiResponse.error("SYNCED_LYRICS_NOT_FOUND", ex.getMessage()));
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
         log.info("Resource not found: {}", ex.getMessage());

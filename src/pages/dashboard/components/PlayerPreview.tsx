@@ -126,35 +126,37 @@ export const PlayerPreview: React.FC = () => {
   return (
     <div className="h-full flex flex-col relative">
       <div className="glass-panel">
-        <div className="relative z-10 px-6 py-6 sm:px-8 sm:py-8">
-        <div className="glass-layout">
-          <div className="glass-left">
-            <div ref={lyricsContainerRef} className="glass-lyrics glass-lyrics-scroll">
-              {lyrics.length === 0 ? (
-                <div className="glass-lyric glass-lyric-active text-3xl sm:text-4xl">
-                  No lyrics available
-                </div>
-              ) : (
-                lyrics.map((line, index) => {
-                  const isActive = index === lyricState.activeIndex;
-                  return (
-                    <div
-                      key={`${line.timestamp}-${index}`}
-                      ref={isActive ? activeLyricRef : null}
-                      className={`glass-lyric text-2xl sm:text-3xl ${
-                        isActive
-                          ? 'glass-lyric-active'
-                          : 'glass-lyric-next'
-                      } ${index === 0 ? '' : 'mt-5'}`}
-                    >
-                      {line.text || '—'}
-                    </div>
-                  );
-                })
-              )}
+        <div className="relative z-10 p-[clamp(1rem,3cqi,2.5rem)]">
+          <div className="glass-layout">
+            {/* Lyrics Section - Left Side */}
+            <div className="glass-left">
+              <div ref={lyricsContainerRef} className="glass-lyrics glass-lyrics-scroll">
+                {lyrics.length === 0 ? (
+                  <div className="glass-lyric glass-lyric-active">
+                    No lyrics available
+                  </div>
+                ) : (
+                  lyrics.map((line, index) => {
+                    const isActive = index === lyricState.activeIndex;
+                    return (
+                      <div
+                        key={`${line.timestamp}-${index}`}
+                        ref={isActive ? activeLyricRef : null}
+                        className={`glass-lyric ${
+                          isActive
+                            ? 'glass-lyric-active'
+                            : 'glass-lyric-next'
+                        }`}
+                      >
+                        {line.text || '—'}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </div>
-          </div>
 
+            {/* Controls & Meta Section - Right Side */}
             <div className="glass-right">
               <button
                 onClick={togglePlayPause}
@@ -162,17 +164,19 @@ export const PlayerPreview: React.FC = () => {
                 aria-label={isPlaying ? 'Pause' : 'Play'}
               >
                 {isPlaying ? (
-                  <Square className="w-4 h-4 fill-current" />
+                  <Square className="fill-current" />
                 ) : (
-                  <Play className="w-4 h-4 fill-current" />
+                  <Play className="fill-current" />
                 )}
                 <span>{isPlaying ? 'Pause' : 'Play'}</span>
               </button>
+              
               <div>
                 <div className="glass-meta-title">{currentSong.title}</div>
                 <div className="glass-meta-artist">{currentSong.artist}</div>
               </div>
-              <div className="text-xs text-[#1a1a2e]/60">
+              
+              <div className="glass-meta-time">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </div>
             </div>

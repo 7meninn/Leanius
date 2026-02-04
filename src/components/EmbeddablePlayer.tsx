@@ -22,7 +22,8 @@ interface EmbeddablePlayerProps {
 }
 
 /**
- * Embeddable Lyrics Player - Glassmorphism Version
+ * Embeddable Lyrics Player - Responsive Glassmorphism Version
+ * Scales beautifully from phone screens to billboards using container queries
  */
 export const EmbeddablePlayer: React.FC<EmbeddablePlayerProps> = ({
   song,
@@ -30,6 +31,8 @@ export const EmbeddablePlayer: React.FC<EmbeddablePlayerProps> = ({
   className = '',
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const lyricsContainerRef = useRef<HTMLDivElement>(null);
+  const activeLyricRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -52,6 +55,21 @@ export const EmbeddablePlayer: React.FC<EmbeddablePlayerProps> = ({
     }
     setCurrentLyricIndex(index);
   }, [currentTime, lyrics]);
+
+  // Auto-scroll to active lyric
+  useEffect(() => {
+    if (activeLyricRef.current && lyricsContainerRef.current) {
+      const container = lyricsContainerRef.current;
+      const activeLine = activeLyricRef.current;
+      
+      const scrollTop = activeLine.offsetTop - container.offsetTop - 20;
+      
+      container.scrollTo({
+        top: Math.max(0, scrollTop),
+        behavior: 'smooth'
+      });
+    }
+  }, [currentLyricIndex]);
 
   // Handle audio events
   useEffect(() => {
@@ -122,35 +140,42 @@ export const EmbeddablePlayer: React.FC<EmbeddablePlayerProps> = ({
   }, [currentLyricIndex, lyrics]);
 
   const duration = audioRef.current?.duration || 0;
+
   return (
     <div className={`glass-panel ${className}`}>
       <audio ref={audioRef} src={song.audioUrl} preload="auto" />
 
-      <div className="relative z-10 px-6 py-6 sm:px-8 sm:py-8">
+      <div className="relative z-10 p-[clamp(1rem,3cqi,2.5rem)]">
         <div className="glass-layout">
+          {/* Lyrics Section - Left Side */}
           <div className="glass-left">
-            <div className="glass-lyrics glass-lyrics-scroll">
+            <div ref={lyricsContainerRef} className="glass-lyrics glass-lyrics-scroll">
               {lyrics.length === 0 ? (
-                <div className="glass-lyric glass-lyric-active text-3xl sm:text-4xl">
+                <div className="glass-lyric glass-lyric-active">
                   No lyrics available
                 </div>
               ) : (
-                lyrics.map((line, index) => (
-                  <div
-                    key={`${line.timestamp}-${index}`}
-                    className={`glass-lyric text-2xl sm:text-3xl ${
-                      index === lyricState.activeIndex
-                        ? 'glass-lyric-active'
-                        : 'glass-lyric-next'
-                    } ${index === 0 ? '' : 'mt-5'}`}
-                  >
-                    {line.text || '—'}
-                  </div>
-                ))
+                lyrics.map((line, index) => {
+                  const isActive = index === lyricState.activeIndex;
+                  return (
+                    <div
+                      key={`${line.timestamp}-${index}`}
+                      ref={isActive ? activeLyricRef : null}
+                      className={`glass-lyric ${
+                        isActive
+                          ? 'glass-lyric-active'
+                          : 'glass-lyric-next'
+                      }`}
+                    >
+                      {line.text || '—'}
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>
 
+          {/* Controls & Meta Section - Right Side */}
           <div className="glass-right">
             <button
               onClick={togglePlayPause}
@@ -158,17 +183,19 @@ export const EmbeddablePlayer: React.FC<EmbeddablePlayerProps> = ({
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
               {isPlaying ? (
-                <Square className="w-4 h-4 fill-current" />
+                <Square className="fill-current" />
               ) : (
-                <Play className="w-4 h-4 fill-current" />
+                <Play className="fill-current" />
               )}
               <span>{isPlaying ? 'Pause' : 'Play'}</span>
             </button>
+            
             <div>
               <div className="glass-meta-title">{song.title}</div>
               <div className="glass-meta-artist">{song.artist}</div>
             </div>
-            <div className="text-xs text-white/60">
+            
+            <div className="glass-meta-time">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
           </div>

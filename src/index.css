@@ -324,56 +324,10 @@
   }
 }
 
-.glass-meta-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a2e;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-}
-
-.glass-meta-artist {
-  margin-top: 0.35rem;
-  font-size: 0.95rem;
-  color: rgba(26, 26, 46, 0.75);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
-}
-
-.glass-control {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.1rem;
-  border-radius: 999px;
-  background: rgba(26, 26, 46, 0.85);
-  border: 1px solid rgba(26, 26, 46, 0.3);
-  color: #f8fafc;
-  font-weight: 600;
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-}
-
-.glass-control:hover {
-  background: rgba(26, 26, 46, 0.95);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.glass-control:active {
-  transform: translateY(0);
-}
-
 .glass-lyrics {
   font-family: var(--font-heading);
-  line-height: 1.25;
+  line-height: 1.3;
   text-align: left;
-}
-
-.glass-lyric {
-  letter-spacing: -0.01em;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  padding-right: 0.5rem;
 }
 
 .glass-lyric-active {
@@ -388,32 +342,50 @@
   transform: scale(1);
 }
 
+/* =====================================================
+   RESPONSIVE GLASS PLAYER LAYOUT
+   Scales beautifully from phone (320px) to billboard (4K+)
+   Uses container queries for component-level responsiveness
+   ===================================================== */
+
+.glass-panel {
+  container-type: inline-size;
+  container-name: player;
+}
+
 .glass-layout {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-  gap: 2.5rem;
+  grid-template-columns: 7fr 3fr; /* 70/30 split - lyrics more prominent */
+  gap: clamp(1rem, 3cqi, 3rem);
   align-items: center;
+  min-height: clamp(180px, 30cqi, 400px);
 }
 
 .glass-left {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
+  min-width: 0; /* Prevent overflow */
 }
 
 .glass-right {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  text-align: center;
+  gap: clamp(0.5rem, 1.5cqi, 1.25rem);
+  padding-left: clamp(0.5rem, 2cqi, 2rem);
+  border-left: 1px solid rgba(26, 26, 46, 0.1);
+  height: 100%;
 }
 
 .glass-lyrics-scroll {
-  max-height: 280px;
+  max-height: clamp(150px, 25cqi, 350px);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 6px;
+  padding-right: clamp(4px, 1cqi, 12px);
   scrollbar-width: none;
   scroll-behavior: smooth;
 }
@@ -423,13 +395,152 @@
   height: 0;
 }
 
-@media (max-width: 768px) {
+/* Fluid typography that scales with container */
+.glass-lyric {
+  font-size: clamp(1rem, 4cqi, 3rem);
+  letter-spacing: -0.02em;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  padding-right: clamp(0.25rem, 1cqi, 1rem);
+  margin-top: clamp(0.5rem, 1.5cqi, 1.5rem);
+}
+
+.glass-lyric:first-child {
+  margin-top: 0;
+}
+
+.glass-meta-title {
+  font-size: clamp(1rem, 3cqi, 2.5rem);
+  font-weight: 600;
+  color: #1a1a2e;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  line-height: 1.2;
+}
+
+.glass-meta-artist {
+  margin-top: clamp(0.2rem, 0.5cqi, 0.5rem);
+  font-size: clamp(0.75rem, 1.8cqi, 1.25rem);
+  color: rgba(26, 26, 46, 0.7);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.glass-meta-time {
+  font-size: clamp(0.65rem, 1.4cqi, 1rem);
+  color: rgba(26, 26, 46, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+.glass-control {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.35rem, 0.8cqi, 0.75rem);
+  padding: clamp(0.5rem, 1.2cqi, 1rem) clamp(0.75rem, 1.8cqi, 1.5rem);
+  border-radius: 999px;
+  background: rgba(26, 26, 46, 0.85);
+  border: 1px solid rgba(26, 26, 46, 0.3);
+  color: #f8fafc;
+  font-weight: 600;
+  font-size: clamp(0.75rem, 1.6cqi, 1.1rem);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-control svg {
+  width: clamp(0.875rem, 1.8cqi, 1.5rem);
+  height: clamp(0.875rem, 1.8cqi, 1.5rem);
+}
+
+.glass-control:hover {
+  background: rgba(26, 26, 46, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.glass-control:active {
+  transform: translateY(0);
+}
+
+/* Container query breakpoints for the player */
+/* Small: < 400px (mobile phones) */
+@container player (max-width: 400px) {
   .glass-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    text-align: center;
   }
-
+  
+  .glass-left {
+    order: 1;
+  }
+  
   .glass-right {
-    align-items: flex-start;
+    order: 0;
+    align-items: center;
+    border-left: none;
+    border-bottom: 1px solid rgba(26, 26, 46, 0.1);
+    padding-left: 0;
+    padding-bottom: 1rem;
+  }
+  
+  .glass-lyrics {
+    text-align: center;
+  }
+  
+  .glass-lyrics-scroll {
+    max-height: 120px;
+  }
+}
+
+/* Medium: 400px - 600px (large phones, small tablets) */
+@container player (min-width: 400px) and (max-width: 600px) {
+  .glass-layout {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .glass-right {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    border-left: none;
+    border-top: 1px solid rgba(26, 26, 46, 0.1);
+    padding-left: 0;
+    padding-top: 1rem;
+    gap: clamp(1rem, 3cqi, 2rem);
+  }
+  
+  .glass-left {
+    order: 0;
+  }
+  
+  .glass-right {
+    order: 1;
+  }
+  
+  .glass-lyrics-scroll {
+    max-height: 150px;
+  }
+}
+
+/* Large: 600px+ (tablets, desktops, billboards) - uses 70/30 side by side */
+@container player (min-width: 600px) {
+  .glass-layout {
+    grid-template-columns: 7fr 3fr;
+  }
+  
+  .glass-right {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Extra large: 1200px+ (large screens, billboards) */
+@container player (min-width: 1200px) {
+  .glass-lyrics-scroll {
+    max-height: 500px;
   }
 }
 

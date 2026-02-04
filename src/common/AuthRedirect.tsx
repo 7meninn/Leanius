@@ -23,8 +23,8 @@ export const AuthRedirect: React.FC<AuthRedirectProps> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
       </div>
     );
   }
