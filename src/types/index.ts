@@ -25,10 +25,6 @@ export interface Song {
   frequencyWeight: number; // 1-5 multiplier for random selection
   syncOffset: number; // milliseconds offset for lyrics sync
   createdAt: string;
-  // Video background fields (optional)
-  videoUrl?: string;
-  videoFileSize?: number;
-  videoFormat?: string;
 }
 
 // API Response types
@@ -97,14 +93,6 @@ export interface LyricsConfirmRequest {
 
 export interface SongWeightUpdateRequest {
   weight: number;
-}
-
-// Video upload types
-export interface VideoUploadResponse {
-  songId: string;
-  videoUrl: string;
-  videoFileSize: number;
-  message: string;
 }
 
 // Embed types

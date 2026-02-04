@@ -69,25 +69,6 @@ public class Song {
     @Builder.Default
     private boolean lyricsConfirmed = false;
 
-    // ===== VIDEO BACKGROUND FIELDS =====
-
-    /**
-     * Video background URL for lyrics player (optional).
-     * MP4 format, stored in Azure Blob Storage.
-     * Null if no video uploaded.
-     */
-    private String videoUrl;
-
-    /**
-     * Size of video file in bytes.
-     */
-    private long videoFileSize;
-
-    /**
-     * Video format (currently only "mp4").
-     */
-    private String videoFormat;
-
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 

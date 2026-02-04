@@ -22,7 +22,6 @@ interface SongsContextType {
   deleteSong: (songId: string) => Promise<void>;
   updateSongWeight: (songId: string, weight: number) => Promise<void>;
   updateSongSettings: (songId: string, frequencyWeight: number, syncOffset: number) => Promise<void>;
-  updateSongVideoUrl: (songId: string, videoUrl: string | undefined, videoFileSize?: number) => void;
   clearPendingSong: () => void;
   clearError: () => void;
 }
@@ -63,10 +62,6 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
         frequencyWeight: song.frequencyWeight || 3,
         syncOffset: song.syncOffset || 0,
         createdAt: song.createdAt || '',
-        // Video background fields
-        videoUrl: song.videoUrl || undefined,
-        videoFileSize: song.videoFileSize || undefined,
-        videoFormat: song.videoFormat || undefined,
       }));
       
       setSongs(mappedSongs);
@@ -180,23 +175,6 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     }
   }, []);
 
-  /**
-   * Update a song's video URL in local state (after upload/delete).
-   * This is called by the useVideoUpload hook after successful API calls.
-   */
-  const updateSongVideoUrl = useCallback((songId: string, videoUrl: string | undefined, videoFileSize?: number) => {
-    setSongs(prev => prev.map(song => 
-      song.id === songId 
-        ? { 
-            ...song, 
-            videoUrl, 
-            videoFileSize: videoUrl ? videoFileSize : undefined,
-            videoFormat: videoUrl ? 'mp4' : undefined,
-          } 
-        : song
-    ));
-  }, []);
-
   const clearPendingSong = useCallback(() => {
     setPendingSong(null);
   }, []);
@@ -216,7 +194,6 @@ export const SongsProvider: React.FC<SongsProviderProps> = ({ children }) => {
     deleteSong,
     updateSongWeight,
     updateSongSettings,
-    updateSongVideoUrl,
     clearPendingSong,
     clearError,
   };

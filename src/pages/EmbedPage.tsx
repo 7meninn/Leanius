@@ -15,9 +15,6 @@ interface EmbedSong {
   syncOffset: number;
   syncType?: string;
   syncedLyrics: Array<{ startTimeMs: number; text: string }>;
-  videoUrl?: string;
-  videoFileSize?: number;
-  videoFormat?: string;
 }
 
 interface EmbedResponse {
@@ -150,7 +147,6 @@ const EmbedPage: React.FC = () => {
     title: currentSong.title,
     artist: currentSong.artist,
     audioUrl: currentSong.audioUrl,
-    videoUrl: currentSong.videoUrl,
     lyricsSync: currentSong.syncedLyrics?.map(line => ({
       timestamp: line.startTimeMs,
       text: line.text,
@@ -159,7 +155,6 @@ const EmbedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0d1117] flex items-center justify-center p-4 relative">
-      {/* Player - VideoBackground is now integrated inside EmbeddablePlayer */}
       <div className="w-full max-w-md relative z-10">
         <EmbeddablePlayer 
           song={transformedSong}

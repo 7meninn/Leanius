@@ -24,8 +24,6 @@ export const ENDPOINTS = {
     DELETE: (songId: string) => `/songs/${songId}`,
     UPDATE_WEIGHT: (songId: string) => `/songs/${songId}/weight`,
     UPDATE_SETTINGS: (songId: string) => `/songs/${songId}/settings`,
-    VIDEO_UPLOAD: (songId: string) => `/songs/${songId}/video`,
-    VIDEO_DELETE: (songId: string) => `/songs/${songId}/video`,
   },
   // Embed
   EMBED: {
@@ -41,9 +39,7 @@ export const APP_CONFIG = {
   APP_NAME: 'Leanius',
   APP_TAGLINE: 'Embeddable Music Player with Real-Time Lyrics Sync',
   MAX_FILE_SIZE: 50 * 1024 * 1024, // 50MB
-  MAX_VIDEO_SIZE: 50 * 1024 * 1024, // 50MB for video backgrounds
   ALLOWED_AUDIO_TYPES: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3', 'audio/flac', 'audio/x-flac'],
-  ALLOWED_VIDEO_TYPES: ['video/mp4'],
   MIN_PASSWORD_LENGTH: 8,
   FREQUENCY_WEIGHT_MIN: 1,
   FREQUENCY_WEIGHT_MAX: 5,

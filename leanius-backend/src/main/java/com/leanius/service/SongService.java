@@ -204,12 +204,6 @@ public class SongService {
         // Generate SAS URL for secure audio access
         String secureAudioUrl = azureStorageService.generateSasUrlFromBlobUrl(song.getAudioUrl());
         
-        // Generate SAS URL for secure video access (if video exists)
-        String secureVideoUrl = null;
-        if (song.getVideoUrl() != null && !song.getVideoUrl().isEmpty()) {
-            secureVideoUrl = azureStorageService.generateSasUrlFromBlobUrl(song.getVideoUrl());
-        }
-        
         return SongDTO.builder()
                 .id(song.getId())
                 .title(song.getTitle())
@@ -220,10 +214,6 @@ public class SongService {
                 .syncOffset(song.getSyncOffset())
                 .syncType(song.getSyncType())
                 .syncedLyrics(song.getSyncedLyrics())
-                // Video background fields
-                .videoUrl(secureVideoUrl)
-                .videoFileSize(song.getVideoFileSize())
-                .videoFormat(song.getVideoFormat())
                 .build();
     }
 
