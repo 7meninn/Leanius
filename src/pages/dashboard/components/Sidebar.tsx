@@ -28,14 +28,14 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-64 bg-slate-800/50 border-r border-slate-700 flex flex-col h-screen">
+    <aside className="w-64 bg-white/80 backdrop-blur-xl border-r border-[var(--border)] flex flex-col h-screen">
       {/* Logo */}
-      <div className="p-6 border-b border-slate-700">
+      <div className="p-6 border-b border-[var(--border)]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-[var(--ink)] rounded-xl flex items-center justify-center shadow-sm">
             <Music className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-white">Leanius</span>
+          <span className="text-xl font-semibold text-[var(--ink)]">Leanius</span>
         </div>
       </div>
 
@@ -46,10 +46,10 @@ export const Sidebar: React.FC = () => {
             <li key={id}>
               <button
                 onClick={() => setActiveTab(id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-full transition-colors ${
                   activeTab === id
-                    ? 'bg-blue-600 text-white'
-                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                    ? 'bg-[var(--ink)] text-white'
+                    : 'text-[var(--muted-strong)] hover:bg-[var(--bg-muted)] hover:text-[var(--ink)]'
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -61,10 +61,10 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Logout Button */}
-      <div className="p-4 border-t border-slate-700">
+      <div className="p-4 border-t border-[var(--border)]">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-slate-700/50 rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-3 text-[var(--muted)] hover:text-red-500 hover:bg-[var(--bg-muted)] rounded-full transition-colors"
         >
           <LogOut className="h-5 w-5" />
           <span className="font-medium">Logout</span>

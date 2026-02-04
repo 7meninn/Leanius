@@ -12,33 +12,39 @@ import { AuthForms } from './components/AuthForms';
  */
 export const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <Header />
-      
-      {/* Main Content */}
-      <main>
-        {/* Hero Section with Auth Forms Side by Side */}
-        <section className="py-16 lg:py-24">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Side - Hero Content */}
-              <div>
-                <Hero />
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)]">
+      <div className="relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#eef2ff_0%,_transparent_55%)]" />
+        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-white/70 to-transparent" />
+        <div className="relative">
+          <Header />
+
+          {/* Main Content */}
+          <main>
+            {/* Hero Section with Auth Forms Side by Side */}
+            <section className="py-16 lg:py-24">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+                  {/* Left Side - Hero Content */}
+                  <div>
+                    <Hero />
+                  </div>
+
+                  {/* Right Side - Auth Forms */}
+                  <div className="flex justify-center lg:justify-end">
+                    <AuthForms />
+                  </div>
+                </div>
               </div>
+            </section>
 
-              {/* Right Side - Auth Forms */}
-              <div className="flex justify-center lg:justify-end">
-                <AuthForms />
-              </div>
-            </div>
-          </div>
-        </section>
+            <HowItWorks />
+            <Features />
+          </main>
 
-        <HowItWorks />
-        <Features />
-      </main>
-
-      <Footer />
+          <Footer />
+        </div>
+      </div>
     </div>
   );
 };

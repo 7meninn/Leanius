@@ -44,8 +44,8 @@ export const UploadForm: React.FC = () => {
   };
 
   return (
-    <div className="p-4 border-b border-slate-700">
-      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+    <div className="p-4 border-b border-[var(--border)]">
+      <h3 className="text-lg font-semibold text-[var(--ink)] mb-4 flex items-center gap-2">
         <Upload className="h-5 w-5" />
         Add Song
       </h3>
@@ -57,10 +57,10 @@ export const UploadForm: React.FC = () => {
             {...register('title')}
             type="text"
             placeholder="Song Title"
-            className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            className="input-base text-sm"
           />
           {errors.title && (
-            <p className="mt-1 text-xs text-red-400">{errors.title.message}</p>
+            <p className="mt-1 text-xs text-red-500">{errors.title.message}</p>
           )}
         </div>
 
@@ -70,20 +70,20 @@ export const UploadForm: React.FC = () => {
             {...register('artist')}
             type="text"
             placeholder="Artist Name"
-            className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            className="input-base text-sm"
           />
           {errors.artist && (
-            <p className="mt-1 text-xs text-red-400">{errors.artist.message}</p>
+            <p className="mt-1 text-xs text-red-500">{errors.artist.message}</p>
           )}
         </div>
 
         {/* Audio File */}
         <div>
           <label className="block">
-            <div className="flex items-center justify-center px-3 py-4 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
+            <div className="flex items-center justify-center px-3 py-4 border-2 border-dashed border-[var(--border)] rounded-[var(--radius-md)] cursor-pointer hover:border-[var(--ink)] transition-colors bg-[var(--bg-muted)]">
               <div className="text-center">
-                <Music className="h-6 w-6 mx-auto text-slate-400 mb-1" />
-                <span className="text-sm text-slate-400">
+                <Music className="h-6 w-6 mx-auto text-[var(--muted)] mb-1" />
+                <span className="text-sm text-[var(--muted)]">
                   {selectedFileName || 'Click to select audio file'}
                 </span>
               </div>
@@ -100,7 +100,7 @@ export const UploadForm: React.FC = () => {
             </div>
           </label>
           {errors.audioFile && (
-            <p className="mt-1 text-xs text-red-400">{errors.audioFile.message}</p>
+            <p className="mt-1 text-xs text-red-500">{errors.audioFile.message}</p>
           )}
         </div>
 
@@ -108,7 +108,7 @@ export const UploadForm: React.FC = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+          className="w-full btn-primary py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>

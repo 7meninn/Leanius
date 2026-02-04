@@ -7,7 +7,7 @@ import SongsList from './SongsList';
  */
 export const RightSidebar: React.FC = () => {
   return (
-    <aside className="w-80 bg-slate-800/50 border-l border-slate-700 flex flex-col h-screen">
+    <aside className="w-80 bg-white/80 backdrop-blur-xl border-l border-[var(--border)] flex flex-col h-screen">
       <UploadForm />
       <SongsList />
     </aside>

@@ -2,7 +2,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/leanius
+      uri: ${MONGODB_URI:mongodb://localhost:27017/leanius}
 
 jwt:
   secret: dev-secret-key-change-in-production-min-256-bits-required-for-hs256
@@ -10,7 +10,7 @@ jwt:
 azure:
   storage:
     connection-string: ${AZURE_STORAGE_CONNECTION_STRING:UseDevelopmentStorage=true}
-    container-name: leanius-audio-dev
+    container-name: leanius-audio
 
 cors:
   allowed-origins: http://localhost:3000,http://localhost:5173

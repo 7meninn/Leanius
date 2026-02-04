@@ -19,7 +19,7 @@ export const DashboardPage: React.FC = () => {
   }, [fetchSongs]);
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="flex h-screen bg-[var(--bg)] text-[var(--ink)]">
       {/* Left Sidebar - Navigation */}
       <Sidebar />
 

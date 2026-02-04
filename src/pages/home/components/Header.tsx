@@ -10,23 +10,23 @@ export const Header: React.FC = () => {
   const { openAuthModal } = useUI();
 
   return (
-    <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-[var(--border)] bg-white/80 backdrop-blur-xl sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-9 h-9 bg-[var(--ink)] rounded-xl flex items-center justify-center shadow-sm">
               <Music className="h-4 w-4 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">Leanius</span>
+            <span className="text-xl font-semibold text-[var(--ink)] tracking-tight">Leanius</span>
           </Link>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#how-it-works" className="text-slate-400 hover:text-white transition-colors">
+            <a href="#how-it-works" className="text-sm font-medium text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
               How It Works
             </a>
-            <Link to="/terms" className="text-slate-400 hover:text-white transition-colors">
+            <Link to="/terms" className="text-sm font-medium text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
               Terms
             </Link>
           </nav>
@@ -35,13 +35,13 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => openAuthModal('login')}
-              className="text-slate-300 hover:text-white transition-colors"
+              className="btn-ghost"
             >
               Sign In
             </button>
             <button
               onClick={() => openAuthModal('signup')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="btn-primary"
             >
               Get Started
             </button>

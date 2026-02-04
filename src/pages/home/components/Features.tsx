@@ -49,11 +49,11 @@ export const Features: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Everything You Need
+          <h2 className="text-3xl sm:text-4xl font-semibold text-[var(--ink)] mb-4">
+            Everything you need
           </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Powerful features that make Leanius the best choice for embeddable music players
+          <p className="text-lg text-[var(--muted)] max-w-2xl mx-auto">
+            Powerful features that make Leanius the best choice for embeddable music players.
           </p>
         </div>
 
@@ -62,18 +62,18 @@ export const Features: React.FC = () => {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-slate-800/30 border border-slate-700 rounded-lg p-6 hover:bg-slate-800/50 transition-colors group"
+              className="card p-6 transition-transform duration-300 hover:-translate-y-1"
             >
               {/* Icon */}
-              <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
-                <feature.icon className="h-5 w-5 text-blue-400" />
+              <div className="w-11 h-11 bg-[var(--bg-muted)] rounded-xl flex items-center justify-center mb-4">
+                <feature.icon className="h-5 w-5 text-[var(--accent)]" />
               </div>
 
               {/* Content */}
-              <h3 className="text-lg font-semibold text-white mb-2">
+              <h3 className="text-lg font-semibold text-[var(--ink)] mb-2">
                 {feature.title}
               </h3>
-              <p className="text-slate-400 text-sm">
+              <p className="text-[var(--muted)] text-sm">
                 {feature.description}
               </p>
             </div>

@@ -60,31 +60,31 @@ export const SettingsTab: React.FC = () => {
 
   return (
     <div className="p-8 max-w-2xl">
-      <h1 className="text-2xl font-bold text-white mb-8">Settings</h1>
+      <h1 className="text-2xl font-semibold text-[var(--ink)] mb-8">Settings</h1>
 
       {/* Profile Section */}
       <section className="mb-10">
-        <h2 className="text-lg font-semibold text-white mb-4">Profile</h2>
-        <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+        <h2 className="text-lg font-semibold text-[var(--ink)] mb-4">Profile</h2>
+        <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4 card p-6">
           {/* Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-[var(--muted-strong)] mb-1">
               Name
             </label>
             <input
               {...profileForm.register('name')}
               type="text"
               id="name"
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-base"
             />
             {profileForm.formState.errors.name && (
-              <p className="mt-1 text-sm text-red-400">{profileForm.formState.errors.name.message}</p>
+              <p className="mt-1 text-sm text-red-500">{profileForm.formState.errors.name.message}</p>
             )}
           </div>
 
           {/* Email (read-only) */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-[var(--muted-strong)] mb-1">
               Email
             </label>
             <input
@@ -92,15 +92,15 @@ export const SettingsTab: React.FC = () => {
               id="email"
               value={user?.email || ''}
               disabled
-              className="w-full px-4 py-2 bg-slate-900/30 border border-slate-700 rounded-lg text-slate-400 cursor-not-allowed"
+              className="input-muted"
             />
-            <p className="mt-1 text-xs text-slate-500">Email cannot be changed</p>
+            <p className="mt-1 text-xs text-[var(--muted)]">Email cannot be changed</p>
           </div>
 
           <button
             type="submit"
             disabled={isUpdatingProfile}
-            className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            className="btn-primary px-6 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUpdatingProfile ? (
               <>
@@ -116,60 +116,60 @@ export const SettingsTab: React.FC = () => {
 
       {/* Password Section */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-4">Change Password</h2>
-        <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+        <h2 className="text-lg font-semibold text-[var(--ink)] mb-4">Change Password</h2>
+        <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4 card p-6">
           {/* Current Password */}
           <div>
-            <label htmlFor="currentPassword" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="currentPassword" className="block text-sm font-medium text-[var(--muted-strong)] mb-1">
               Current Password
             </label>
             <input
               {...passwordForm.register('currentPassword')}
               type="password"
               id="currentPassword"
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-base"
             />
             {passwordForm.formState.errors.currentPassword && (
-              <p className="mt-1 text-sm text-red-400">{passwordForm.formState.errors.currentPassword.message}</p>
+              <p className="mt-1 text-sm text-red-500">{passwordForm.formState.errors.currentPassword.message}</p>
             )}
           </div>
 
           {/* New Password */}
           <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="newPassword" className="block text-sm font-medium text-[var(--muted-strong)] mb-1">
               New Password
             </label>
             <input
               {...passwordForm.register('newPassword')}
               type="password"
               id="newPassword"
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-base"
             />
             {passwordForm.formState.errors.newPassword && (
-              <p className="mt-1 text-sm text-red-400">{passwordForm.formState.errors.newPassword.message}</p>
+              <p className="mt-1 text-sm text-red-500">{passwordForm.formState.errors.newPassword.message}</p>
             )}
           </div>
 
           {/* Confirm New Password */}
           <div>
-            <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-slate-300 mb-1">
+            <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-[var(--muted-strong)] mb-1">
               Confirm New Password
             </label>
             <input
               {...passwordForm.register('confirmNewPassword')}
               type="password"
               id="confirmNewPassword"
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-base"
             />
             {passwordForm.formState.errors.confirmNewPassword && (
-              <p className="mt-1 text-sm text-red-400">{passwordForm.formState.errors.confirmNewPassword.message}</p>
+              <p className="mt-1 text-sm text-red-500">{passwordForm.formState.errors.confirmNewPassword.message}</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={isChangingPassword}
-            className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            className="btn-primary px-6 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isChangingPassword ? (
               <>
